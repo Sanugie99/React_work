@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 const TimerFunction = () => {
 
@@ -14,14 +14,14 @@ const TimerFunction = () => {
     useEffect(() => {
         //setInterval() : 일정한 시간 간격으로 지정된 함수를 반복적으로 실행
         const timer = setInterval(() => {
-            setTime((prev) => prev+1);
-        },1000);
+            setTime((prev) => prev + 1);
+        }, 1000);
 
         //클린업 함수
-        return () => {clearInterval(timer)};
-    },[]);
+        return () => { clearInterval(timer) };
+    }, []);
 
-    return(
+    return (
         <div>
             <h1>Timer: {time} seconds</h1>
         </div>
@@ -47,9 +47,9 @@ export const UserList = () => {
                 const response = await fetch("https://jsonplaceholder.typicode.com/users");
                 //fetch()함수를 실행하고 나면 promise객체를 돌려준다.
                 //response.ok : 통신이 잘 되면 true 안되면 false
-                if(!response.ok){
+                if (!response.ok) {
                     throw new Error(`HTTP 오류! 상태: ${response.status}`);
-                    
+
                 }
                 //통신에 문제가 없었다.
                 const data = await response.json();
@@ -60,18 +60,18 @@ export const UserList = () => {
                 setLoading(false);
             }
         }
-        
+
         fetchUsers();
     }, []);
 
-    if(loading){
+    if (loading) {
         return <div>로딩중...</div>
     }
-    if(error){
-        return<div>에러 발생: {error.message}</div>
+    if (error) {
+        return <div>에러 발생: {error.message}</div>
     }
-    
-    return(
+
+    return (
         <div>
             <h2>사용자 목록</h2>
             <ul>
@@ -79,7 +79,7 @@ export const UserList = () => {
                     <li key={user.id}>
                         {user.name} ({user.email})
                     </li>
-                    ))}
+                ))}
             </ul>
         </div>
     )
@@ -89,21 +89,44 @@ export const UserList = () => {
 export const Count = () => {
     const [count, setCount] = useState(0);
     const [renderCount, setRenderCount] = useState(0);
-    
+
     useEffect(() => {
-        setRenderCount(renderCount+1);
+        setRenderCount(renderCount + 1);
         console.log("렌더링 완료");
     }, [count])
 
     const addCount = () => {
-        setCount(count+1);
+        setCount(count + 1);
     }
 
-    return(
+    return (
         <div>
             <h1>렌더링 횟수 {renderCount}</h1>
             <h1>Count : {count}</h1>
             <button onClick={addCount}>클릭</button>
+        </div>
+    )
+}
+
+export const Cleanup = (props) => {
+    const [value, setValue] = useState(props.value);
+    //APP.js에서 value를 받아서 화면에 출력하기.
+    useEffect(() => {
+        console.log(`-> 이펙트 실행 : ${value}`);
+
+        //클린업 함수
+        //사이드 이펙트 함수의 return에 들어있는 함수
+        return () => {
+            console.log(`* 정리(cleanup) : ${value}`)
+        }
+    }, [value]);
+
+    return (
+        <div>
+            <p>현재 value : {value}</p>
+            <button onClick={() => setValue(v => v + 1)}>
+                value 증가({value})
+            </button>
         </div>
     )
 }

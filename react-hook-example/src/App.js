@@ -2,13 +2,13 @@ import './App.css';
 import { ShowHide } from './hook/Exam';
 import Sol1 from './hook/Exam2'
 import { useState } from "react"
-import TimerFunction, {Count, UserList } from './hook/UseEffectEx';
-import { Counter_ref, InputFocus, InputSample } from './hook/UseRefEx';
+import TimerFunction, {Cleanup, Count, UserList } from './hook/UseEffectEx';
+import { Counter_ref, InputFocus, InputSample, PreviousValue } from './hook/UseRefEx';
 
 function App() {
   return (
     <div className="App">
-      <InputSample />
+      <PreviousValue value = {10}/>
     </div>
   );
 }

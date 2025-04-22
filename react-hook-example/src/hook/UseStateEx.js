@@ -19,10 +19,10 @@ let Counter = (props) => {
     //함수를 정의하고 호출하던지
     //화살표 함수를 이용해서 호출하던지
 
-    return(
+    return (
         <div>
             <h1>{count}</h1>
-            <button onClick={() => setCount(count+1)}>UP</button>
+            <button onClick={() => setCount(count + 1)}>UP</button>
         </div>
     )
 }
@@ -32,7 +32,7 @@ let Counter = (props) => {
 //항상 모듈당 1개만 허용 import할때 {}안해도 됨
 //마음대로 지정 가능
 
-export {Counter}
+export { Counter }
 //named export
 //모듈당 여러개를 내보낼 수 있다.
 //import할 때도 export할 떄 쓰던 이름을 {}안에 정확히 맞춰 써야 한다
