@@ -3,26 +3,16 @@ import { useState } from 'react'
 //하나의 파일에 하나의 컴포넌트만 만들수도 있지만
 //여러개의 컴포넌트를 정의할 수도 있다
 
-//매개변수로 넘겨온 값은 읽기 전용이다
-let Counter = (props) => {
+let Counter = () => {
 
     //hook은 항상 함수영 컴포넌트 안에서만 사용할 수 있다
     //useState()는 상태값과 상태값을 바꾸는 함수 두가지를 요소로 갖는 배열을 반환한다
     //반환된 배열을 구조분해할당을 통해서 받는다.
-
-    //읽어온 값을 변경하기 위해서는 state로 관리해야한다
-    const [count, setCount] = useState(props.count);
-
-    // let handleClick = () =>{
-    //     setCount(count+1);
-    // }
-    //함수를 정의하고 호출하던지
-    //화살표 함수를 이용해서 호출하던지
-
-    return (
+    const [count, setCount] = useState(100);
+    console.log(count);
+    return(
         <div>
             <h1>{count}</h1>
-            <button onClick={() => setCount(count + 1)}>UP</button>
         </div>
     )
 }
@@ -32,7 +22,7 @@ let Counter = (props) => {
 //항상 모듈당 1개만 허용 import할때 {}안해도 됨
 //마음대로 지정 가능
 
-export { Counter }
+export {Counter}
 //named export
 //모듈당 여러개를 내보낼 수 있다.
 //import할 때도 export할 떄 쓰던 이름을 {}안에 정확히 맞춰 써야 한다
