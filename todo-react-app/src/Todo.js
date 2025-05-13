@@ -34,8 +34,8 @@ let Todo = (props) => {
 
     const turnOnReadOnly = (e) => {
         if(e.key == 'Enter' && readOnly === false){
-            setReadOnly(true);
-            editItem(item)
+            setReadOnly(true);//readOnly true가 읽기만 허용
+            editItem(item);
         }
     }
 
@@ -50,13 +50,12 @@ let Todo = (props) => {
     const editEventHandler = (e) => {
         setItem({...item, title:e.target.value})
     }
-
-    //체크박스 변경 함수
+    
+    //체크박스 변경함수
     const checkBoxEventHandler = (e) => {
         item.done = e.target.checked;
         editItem(item);
     }
-    
 
     //삭제함수
     const deleteItem = props.deleteItem;

@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import logo from './logo.svg';
 import Todo from './Todo';
 import AddTodo from './AddTodo';
-import { Container, List, Paper } from '@mui/material'
-import axios from 'axios';
-import { call } from './service/ApiService';
-import { ResetTvOutlined } from '@mui/icons-material';
+import { AppBar, Container, Grid, List, Paper, Toolbar, Typography, Button } from '@mui/material'
+import { call, signout } from './service/ApiService'
 
 //Container
 //레이아웃의 가로 폭을 제한하고, 중앙 정렬 및 기본 패딩을 자동으로 적용해주는 컴포넌트
@@ -18,40 +16,26 @@ import { ResetTvOutlined } from '@mui/icons-material';
 function App() {
 
   //하나의 할 일을 객체로 관리할 것이다.
-  //id, title, done
+  //{id, title, done}
   const [items, setItems] = useState([])
-
-  axios.get("http://localhost:10000/todo", {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-    .then(response => {
-      setItems(response.data); // response.data를 통해 서버에서 반환된 데이터를 처리
-    })
-    .catch(error => {
-      console.error("There was an error!", error); // 에러 처리
-    });
+  const [loading, setLoading] = useState(true);
 
   //최초 렌더링시 1번만 실행
   useEffect(() => {
-    axios.get("http://localhost:9090/todo", {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(response => {
-        setItems(response.data); // response.data를 통해 서버에서 반환된 데이터를 처리
+    //조회
+    call("/todo", "GET")
+      .then(result => {
+        setItems(result)
+        setLoading(false)
       })
-      .catch(error => {
-        console.error("There was an error!", error); // 에러 처리
-      });
-  }, [])
-
+  }, []);
 
   const add = (item) => {
-    //데이터베이스에 추가하기 위해 백엔드로 데이터를 전달.
+    //데이터베이스에 추가하기 위해 백엔드로 데이터를 전달
+    //call메서드의 호출 결과는 결국 Promise이기 때문에 .then을 이어서 쓸 수 있다.
     call("/todo", "POST", item)
+      //데이터를 추가하고, 전체 데이터를 반환받아서 state에 세팅을 하여
+      //다시 렌더링이 일어남
       .then(result => setItems(result.data))
   }
 
@@ -70,7 +54,7 @@ function App() {
 
   //react는 key속성에 들어있는 값을 참고해서, 리스트의 요소가 변경될 경우
   //어떤 요소가 변경되었는지 빠르게 파악할 수 있다.
-  const todoItems = items.length > 0 &&
+  const todoItems = items?.length > 0 &&
     //Paper컴포넌트
     //종이 같은 표면 효과를 제공하는 컨테이너 컴포넌트
     //elevation(그림자깊이)를 통해 높낮이를 표현하고
@@ -83,13 +67,46 @@ function App() {
       </List>
     </Paper>
 
-  return (
-    <div className="App">
+  //네비게이션 바
+  let navigationBar = (
+    <AppBar position="static">
+      <Toolbar>
+        <Grid justifyContent="space-between" container sx={{ flexGrow: 1 }}>
+          <Grid item>
+            <Typography variant='h6'>오늘의 할 일</Typography>
+          </Grid>
+          <Grid item>
+            <Button color='inherit' raised onClick={signout}>
+              로그아웃
+            </Button>
+          </Grid>
+        </Grid>
+      </Toolbar>
+    </AppBar>
+  )
+
+  //로딩중이 아닐때 렌더링할 부분
+  let todoListPage = (
+    <div>
+      {navigationBar}
       <Container maxWidth="md">
         {/* AddTodo에 add함수를 전달  {add : function add(item) {~} */}
         <AddTodo add={add} />
         {todoItems}
       </Container>
+    </div>
+  )
+
+  //로딩중일 때 렌더링 할 부분
+  let loadingpage = <h1>로딩중</h1>
+  let content = loadingpage;
+
+  if (!loading) {
+    content = todoListPage;
+  }
+  return (
+    <div className="App">
+      {content}
     </div>
   );
 }
